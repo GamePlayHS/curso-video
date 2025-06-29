@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Models;
+namespace src\models;
 
 use core\Model;
 
@@ -31,6 +31,11 @@ class Curso extends Model {
      * @var string
      */
     private $nomeImagem;
+    /**
+     * Tipo Imagem
+     * @var string
+     */
+    private $tipoImagem;
 
     /**
      * Retorna o Código
@@ -110,6 +115,22 @@ class Curso extends Model {
      */
     public function setNomeImagem($nomeImagem) {
         $this->nomeImagem = $nomeImagem;
+    }
+
+    /**
+     * Retorna o Tipo Imagem
+     * @return string
+     */ 
+    public function getTipoImagem() {
+        return $this->tipoImagem;
+    }
+
+    /**
+     * Define o Tipo Imagem
+     * @param string $tipoImagem
+     */ 
+    public function setTipoImagem($tipoImagem) {
+        $this->tipoImagem = $tipoImagem;
     }
 
 }

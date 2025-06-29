@@ -25,13 +25,13 @@ use core\Principal;
             <!-- Nome do Curso -->
             <div class="mb-3">
                 <label for="cursoNome" class="form-label">Nome do Curso</label>
-                <input type="text" class="form-control" id="cursoNome" required>
+                <input type="text" class="form-control" id="cursoNome" name="cursoNome" required>
             </div>
 
             <!-- Descrição -->
             <div class="mb-3">
                 <label for="cursoDescricao" class="form-label">Descrição</label>
-                <textarea class="form-control" id="cursoDescricao" rows="4" maxlength="255" required></textarea>
+                <textarea class="form-control" id="cursoDescricao" name="cursoDescricao" rows="4" maxlength="255" required></textarea>
             </div>
 
             <!-- Imagem do Curso -->

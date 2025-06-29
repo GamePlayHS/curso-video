@@ -3,10 +3,12 @@ use core\Router;
 
 $router = new Router();
 
-// Home
+/* HOME */
+
 $router->get('/', 'HomeController@index');
-// Gerenciar Cursos
+
+/* CURSOS */
+
 $router->get('/gerenciar-cursos', 'CursoController@index');
-// Incluir
-$router->get('/incluir-curso', 'HomeController@incluirCurso');
-$router->post('/incluir-curso', 'HomeController@processaInclusaoCurso');
+$router->get('/incluir-curso', 'CursoController@incluirCurso');
+$router->post('/incluir-curso', 'CursoController@create');

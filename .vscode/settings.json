@@ -1,20 +1,4 @@
 {
-    "configurations": [
-        {
-            "name": "Launch built-in server and Debug",
-            "type": "php",
-            "request": "launch",
-            "noDebug": false,
-            "runtimeArgs": [
-                "-S",
-                "localhost:8000",
-                "-t",
-                "."
-            ],
-            "cwd": "${workspaceRoot}/public",
-            "serverReadyAction": {
-                "action": "openExternally"
-            }
-        }
-    ]
+    "php.inlayHints.parameters.enabled": false,
+    "php.inlayHints.parameters.byReference": false
 }
