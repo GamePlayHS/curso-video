@@ -9,6 +9,7 @@ $router->get('/', 'HomeController@index');
 
 /* CURSOS */
 
-$router->get('/gerenciar-cursos', 'CursoController@index');
-$router->get('/incluir-curso', 'CursoController@incluirCurso');
-$router->post('/incluir-curso', 'CursoController@create');
+$router->get('/cursos', 'CursoController@index');
+$router->get('/curso/incluir', 'CursoController@incluirCurso');
+$router->post('/curso/incluir', 'CursoController@create');
+$router->get('/curso/excluir/{codigo}', 'CursoController@incluirCurso');

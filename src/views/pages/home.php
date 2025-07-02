@@ -22,7 +22,7 @@ use core\Principal;
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto"> <!-- Alinhando o botão à direita -->
                     <li class="nav-item">
-                        <a class="btn btn-primary" href="<?= $base ?>/gerenciar-cursos">Gerenciar Cursos</a><!-- Botão de gerenciamento -->
+                        <a class="btn btn-primary" href="<?= $base ?>/cursos">Gerenciar Cursos</a><!-- Botão de gerenciamento -->
                     </li>
                 </ul>
             </div>
