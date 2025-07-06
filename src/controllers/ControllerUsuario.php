@@ -5,10 +5,17 @@ namespace Src\Controllers;
 use core\Controller;
 use core\Database;
 
-class ControllerUserRegister extends Controller {
+class ControllerUsuario extends Controller {
 
     public function index() {
-        $this->render('ViewUserRegister');
+        $this->render('ViewRegisterUsuario');
+    }
+
+    public function dadosCadastrais() {
+        // Aqui você pode implementar a lógica para exibir os dados cadastrais do usuário
+        // Por exemplo, buscar os dados do usuário logado no banco de dados e renderizar uma view
+        $this->render('ViewUsuario');
+        
     }
 
     public function register() {

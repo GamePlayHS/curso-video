@@ -20,10 +20,36 @@ use core\Principal;
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto"> <!-- Alinhando o botão à direita -->
-                    <li class="nav-item">
-                        <a class="btn btn-primary" href="<?= $base ?>/cursos">Gerenciar Cursos</a><!-- Botão de gerenciamento -->
-                    </li>
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <?php if (!empty($_SESSION['usuario'])): ?>
+                        <li class="nav-item me-2">
+                            <span class="navbar-text text-white">
+                                Bem-vindo, <strong><?= htmlspecialchars($_SESSION['usuario']['nome']) ?></strong>!
+                            </span>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="btn btn-primary dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Ações
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <?php if (!empty($_SESSION['usuario']['gestor']) && $_SESSION['usuario']['gestor']): ?>
+                                    <li>
+                                        <a class="dropdown-item" href="<?= $base ?>/cursos">Gerenciar Cursos</a>
+                                    </li>
+                                <?php endif; ?>
+                                <li>
+                                    <a class="dropdown-item" href="<?= $base ?>/usuario/dados">Dados Cadastrais</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="<?= $base ?>/logout">Sair</a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item me-2">
+                            <a class="btn btn-primary" href="<?= $base ?>/cursos">Gerenciar Cursos</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -38,37 +64,24 @@ use core\Principal;
         </div>
 
         <div class="row" id="coursesContainer">
-            <div class="col-md-4 course-item">
-                <div class="card">
-                    <img src="curso1.jpg" class="card-img-top" alt="Curso 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Curso de HTML e CSS</h5>
-                        <p class="card-text">Aprenda a desenvolver páginas web com HTML e CSS.</p>
-                        <a href="#" class="btn btn-primary">Ver Curso</a>
+            <?php if (!empty($cursos)): ?>
+                <?php foreach ($cursos as $curso): ?>
+                    <div class="col-md-4 course-item mb-4">
+                        <div class="card h-100">
+                            <img src="data:image/jpeg;base64,<?= $curso['curimagem'] ?>" class="card-img-top" alt="<?= htmlspecialchars($curso['curnome']) ?>" style="height: 200px; object-fit: cover;">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><?= htmlspecialchars($curso['curnome']) ?></h5>
+                                <p class="card-text"><?= htmlspecialchars($curso['curdescricao']) ?></p>
+                                <a href="<?= $base ?>/curso/visualizar/<?= $curso['curcodigo'] ?>" class="btn btn-primary mt-auto">Ver Curso</a>
+                            </div>
+                        </div>
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12">
+                    <div class="alert alert-info text-center">Nenhum curso disponível no momento.</div>
                 </div>
-            </div>
-            <div class="col-md-4 course-item">
-                <div class="card">
-                    <img src="curso2.jpg" class="card-img-top" alt="Curso 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Curso de JavaScript</h5>
-                        <p class="card-text">Domine a linguagem JavaScript e crie aplicações web interativas.</p>
-                        <a href="#" class="btn btn-primary">Ver Curso</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 course-item">
-                <div class="card">
-                    <img src="curso3.jpg" class="card-img-top" alt="Curso 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Curso de Bootstrap</h5>
-                        <p class="card-text">Aprenda a utilizar o framework Bootstrap para criar layouts responsivos.
-                        </p>
-                        <a href="#" class="btn btn-primary">Ver Curso</a>
-                    </div>
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
 

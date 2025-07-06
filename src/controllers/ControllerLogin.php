@@ -30,9 +30,10 @@ class ControllerLogin extends Controller {
             if ($usuario && password_verify($senha, $usuario['ususenha'])) {
                 // Autenticação bem-sucedida, inicia a sessão
                 $_SESSION['usuario'] = [
-                    'usucodigo' => $usuario['usucodigo'],
-                    'usunome'   => $usuario['usunome'],
-                    'usuemail'  => $usuario['usuemail']
+                    'codigo' => $usuario['usucodigo'],
+                    'nome'   => $usuario['usunome'],
+                    'email'  => $usuario['usuemail'],
+                    'gestor' => $usuario['usugestor'],
                 ];
                 $this->redirect('/');
             }
@@ -42,6 +43,9 @@ class ControllerLogin extends Controller {
     }
 
     public function logout() {
-        // Lógica de logout
+        session_unset();
+        session_destroy();
+
+        $this->redirect('/login');
     }
 }

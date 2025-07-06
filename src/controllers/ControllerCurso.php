@@ -67,13 +67,12 @@ class ControllerCurso extends Controller {
             $sDescricaoCurso = filter_input(INPUT_POST, 'descricao');
 
             // Lê o conteúdo da imagem em binário
-            $imageData = file_get_contents($_FILES["imagem"]["tmp_name"]);
-
+            $sImageData = base64_encode(file_get_contents($_FILES["imagem"]["tmp_name"]));
             // Exemplo de inserção no banco (ajuste conforme sua tabela)
             $stmt = $oConexao->prepare("INSERT INTO tbcurso (curnome, curdescricao, curimagem, curnomeimagem, curtipoimagem) VALUES (:nome, :descricao, :imagem, :nomeImagem, :tipoImagem)");
             $stmt->bindParam(':nome'      , $sNomeCurso);
             $stmt->bindParam(':descricao' , $sDescricaoCurso);
-            $stmt->bindParam(':imagem'    , $imageData, PDO::PARAM_LOB);
+            $stmt->bindParam(':imagem'    , $sImageData);
             $stmt->bindParam(':nomeImagem', $sNomeArquivo);
             $stmt->bindParam(':tipoImagem', $_FILES["imagem"]["type"]);
 
@@ -114,7 +113,7 @@ class ControllerCurso extends Controller {
         // Verifica se foi enviado um novo arquivo de imagem
         if (isset($_FILES["imagem"]) && $_FILES["imagem"]["error"] == 0) {
             $sNomeArquivo = basename($_FILES["imagem"]["name"]);
-            $imageData    = file_get_contents($_FILES["imagem"]["tmp_name"]);
+            $imageData    = base64_encode(file_get_contents($_FILES["imagem"]["tmp_name"]));
             $tipoImagem   = $_FILES["imagem"]["type"];
 
             $stmt = $oConexao->prepare(

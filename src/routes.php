@@ -3,14 +3,22 @@ use core\Router;
 
 $router = new Router();
 
-/* HOME */
+/* LOGIN */
 
-$router->get('/', 'ControllerHome@index');
 $router->get('/login', 'ControllerLogin@index');
 $router->get('/loginInvalido', 'ControllerLogin@index');
 $router->post('/login', 'ControllerLogin@login');
-$router->get('/register', 'ControllerUserRegister@index');
-$router->post('/register', 'ControllerUserRegister@register');
+$router->get('/logout', 'ControllerLogin@logout');
+
+/* USUÁRIO */
+
+$router->get('/usuario/cadastrar', 'ControllerUsuario@index');
+$router->post('/usuario/cadastrar', 'ControllerUsuario@register');
+$router->get('/usuario/dadosCadastrais', 'ControllerUsuario@dadosCadastrais');
+
+/* HOME */
+
+$router->get('/', 'ControllerHome@index');
 
 /* CURSOS */
 
