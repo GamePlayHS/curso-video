@@ -1,71 +1,72 @@
-<!DOCTYPE html>
+<?php 
+use core\Principal;
+?><!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
-    <title>Vídeo</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; }
-        .container { max-width: 900px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; }
-        h1 { text-align: center; color: #333; }
-        .video-list { width: 100%; border-collapse: collapse; margin-top: 30px; }
-        .video-list th, .video-list td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
-        .video-list th { background: #f0f0f0; }
-        .actions button { margin-right: 8px; }
-        .add-video { display: block; margin: 20px 0; text-align: right; }
-        .add-video a { background: #28a745; color: #fff; padding: 10px 18px; border-radius: 4px; text-decoration: none; }
-        .add-video a:hover { background: #218838; }
-    </style>
+    <title>Adicionar Novo Vídeo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <div class="container">
-        <h1>Vídeo</h1>
-        <div class="add-video">
-            <a href="/videos/novo">Adicionar Novo Vídeo</a>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Gerenciar Vídeos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
-        <table class="video-list">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Descrição</th>
-                    <th>URL</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Exemplo de linha de vídeo, substitua pelo loop PHP -->
-                <tr>
-                    <td>1</td>
-                    <td>Exemplo de Vídeo</td>
-                    <td>Descrição do vídeo exemplo.</td>
-                    <td><a href="https://youtu.be/exemplo" target="_blank">Assistir</a></td>
-                    <td class="actions">
-                        <button onclick="window.location.href='/videos/editar/1'">Editar</button>
-                        <button onclick="if(confirm('Deseja excluir este vídeo?')) window.location.href='/videos/excluir/1'">Excluir</button>
-                    </td>
-                </tr>
-                <!-- Fim do exemplo -->
-                <?php if (!empty($videos)): ?>
-                    <?php foreach ($videos as $video): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($video['id']) ?></td>
-                            <td><?= htmlspecialchars($video['titulo']) ?></td>
-                            <td><?= htmlspecialchars($video['descricao']) ?></td>
-                            <td><a href="<?= htmlspecialchars($video['url']) ?>" target="_blank">Assistir</a></td>
-                            <td class="actions">
-                                <button onclick="window.location.href='/videos/editar/<?= $video['id'] ?>'">Editar</button>
-                                <button onclick="if(confirm('Deseja excluir este vídeo?')) window.location.href='/videos/excluir/<?= $video['id'] ?>'">Excluir</button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5" style="text-align:center;">Nenhum vídeo cadastrado.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="mb-4 text-center">Adicionar Novo Vídeo</h2>
+                        <form action="<?= $action ?>" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="titulo" name="titulo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descricao" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="descricao" name="descricao" rows="3"
+                                    required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tipo_video" class="form-label">Tipo Vídeo</label>
+                                <select class="form-select" id="tipo_video" name="tipo_video" required>
+                                    <option value="arquivo" selected>Arquivo</option>
+                                    <option value="url">URL Vídeo</option>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="campo-arquivo">
+                                <label for="arquivo" class="form-label">Arquivo de Vídeo</label>
+                                <input type="file" class="form-control" id="arquivo" name="arquivo" accept="video/*">
+                            </div>
+                            <div class="mb-3 d-none" id="campo-url">
+                                <label for="url" class="form-label">URL</label>
+                                <input type="url" class="form-control" id="url" name="url" placeholder="https://">
+                                <div class="form-text">Informe uma URL de vídeo (YouTube, Vimeo, etc.).</div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-success">Salvar Vídeo</button>
+                                <a href="<?= $base ?>/curso/<?= $codigoCurso ?>/videos"
+                                    class="btn btn-secondary ms-2">Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= Principal::getPathJs() ?>ViewManutencaoVideo.js"></script>
 </body>
+
 </html>

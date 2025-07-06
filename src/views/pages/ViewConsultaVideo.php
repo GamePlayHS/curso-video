@@ -15,7 +15,7 @@ use core\Principal;
     <div class="container mt-4">
         <h1 class="mb-4 text-center">Consulta de Vídeos</h1>
         <div class="mb-3">
-            <a href="/videos/incluir" class="btn btn-success">Incluir Vídeo</a>
+            <a href="<?= $base ?>/curso/<?= $codigoCurso ?>/video/incluir" class="btn btn-success">Adicionar Novo Vídeo</a>
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered align-middle">
@@ -32,7 +32,7 @@ use core\Principal;
                     <?php if (!empty($videos)): ?>
                         <?php foreach ($videos as $video): ?>
                             <tr>
-                                <td><?= htmlspecialchars($video['id']) ?></td>
+                                <td><?= htmlspecialchars($video['codigo']) ?></td>
                                 <td><?= htmlspecialchars($video['titulo']) ?></td>
                                 <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     <?= htmlspecialchars($video['descricao']) ?>

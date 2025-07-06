@@ -4,6 +4,7 @@ namespace Src\Controllers;
 
 use core\Controller;
 use core\Database;
+use core\Principal;
 use PDO;
 
 class ControllerVideo extends Controller {
@@ -12,7 +13,7 @@ class ControllerVideo extends Controller {
         $oConexao = Database::getInstance();
 
         // Parâmetros de filtro e paginação
-        $curcodigo = isset($args['curcodigo']) ? (int)$args['curcodigo'] : null;
+        $curcodigo = isset($args['curso']) ? (int)$args['curso'] : null;
         $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
         $porPagina = 10;
         $offset = ($paginaAtual - 1) * $porPagina;
@@ -51,21 +52,65 @@ class ControllerVideo extends Controller {
         // Renderiza a view de consulta de vídeos, passando os vídeos encontrados e paginação
         $this->render('ViewConsultaVideo', [
             'videos' => $videos,
+            'codigoCurso' => $curcodigo,
             'paginaAtual' => $paginaAtual,
             'totalPaginas' => $totalPaginas
         ]);
     }
 
-    public function show($args) {
-        // Lógica para exibir um vídeo específico
+    public function incluirVideo($args) {
+        $this->render('ViewManutencaoVideo', [
+            'codigoCurso' => $args['curso'] ?? null,
+            'action' => Principal::getBaseUrl() . '/curso/' . ($args['curso'] ?? null) . '/videos/incluir',
+        ]);
     }
 
     public function create() {
-        // Lógica para exibir formulário de criação de vídeo
-    }
+        $oConexao = Database::getInstance();
+        $titulo = filter_input(INPUT_POST, 'titulo', FILTER_SANITIZE_STRING);
+        $descricao = filter_input(INPUT_POST, 'descricao', FILTER_SANITIZE_STRING);
+        $tipoVideo = filter_input(INPUT_POST, 'tipo_video', FILTER_SANITIZE_STRING);
+        $cursoCodigo = filter_input(INPUT_POST, 'curso_codigo', FILTER_VALIDATE_INT);
 
-    public function store($args) {
-        // Lógica para salvar um novo vídeo
+        if ($tipoVideo === 'arquivo' && isset($_FILES['arquivo']) && $_FILES['arquivo']['error'] === UPLOAD_ERR_OK) {
+            // Diretório onde os vídeos serão salvos
+            $diretorio = __DIR__ . '/../../../public/videos/';
+            if (!is_dir($diretorio)) {
+                mkdir($diretorio, 0777, true);
+            }
+
+            $nomeArquivo = uniqid('video_') . '_' . basename($_FILES['arquivo']['name']);
+            $caminhoRelativo = 'videos/' . $nomeArquivo;
+            $caminhoCompleto = $diretorio . $nomeArquivo;
+
+            if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $caminhoCompleto)) {
+                $stmt = $oConexao->prepare("INSERT INTO tbvideo (vidtitulo, viddescricao, vidtipo, vidcaminho, curcodigo) VALUES (:titulo, :descricao, :tipo, :caminho, :curso)");
+                $stmt->bindValue(':caminho', $caminhoRelativo);
+            } else {
+                echo "<script>alert('Erro ao salvar o arquivo de vídeo.');</script>";
+                $this->redirect('/curso/' . (int)$cursoCodigo . '/videos');
+                return;
+            }
+        } else {
+            $url = filter_input(INPUT_POST, 'url', FILTER_SANITIZE_URL);
+            $stmt = $oConexao->prepare("INSERT INTO tbvideo (vidtitulo, viddescricao, vidtipo, vidurl, curcodigo) VALUES (:titulo, :descricao, :tipo, :url, :curso)");
+            $stmt->bindValue(':url', $url);
+        }
+
+        // Bind dos outros parâmetros
+        $stmt->bindValue(':titulo', $titulo);
+        $stmt->bindValue(':descricao', $descricao);
+        $stmt->bindValue(':tipo', $tipoVideo);
+        $stmt->bindValue(':curso', (int)$cursoCodigo);
+
+        if ($stmt->execute()) {
+            echo "<script>alert('Vídeo cadastrado com sucesso.');</script>";
+        } else {
+            echo "<script>alert('Erro ao cadastrar o vídeo.');</script>";
+        }
+        
+        // Redireciona para a lista de vídeos do curso
+        $this->redirect('/curso/' . (int)$cursoCodigo . '/videos');
     }
 
     public function edit($args) {
