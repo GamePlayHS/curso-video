@@ -4,7 +4,9 @@ namespace Src\Controllers;
 
 use core\Controller;
 use core\Database;
+use core\Principal;
 use PDO;
+use src\models\Curso;
 
 class ControllerCurso extends Controller {
 
@@ -15,7 +17,7 @@ class ControllerCurso extends Controller {
         $oConexao = Database::getInstance();
 
         // Conta o total de cursos para calcular o total de páginas
-        $stmtTotal = $oConexao->query("SELECT COUNT(*) as total FROM tbcurso");
+        $stmtTotal = $oConexao->query("SELECT COUNT(*) as total FROM tbcurso ");
         $totalRegistros = $stmtTotal->fetch(PDO::FETCH_ASSOC)['total'];
         $totalPaginas = ceil($totalRegistros / $iTotalPorPagina);
 
@@ -38,7 +40,7 @@ class ControllerCurso extends Controller {
     }
 
     public function incluirCurso() {
-        $this->render('ViewManutencaoCurso');
+        $this->render('ViewManutencaoCurso', ['action' => Principal::getBaseUrl() . '/curso/incluir']);
     }
 
     /**
@@ -61,8 +63,8 @@ class ControllerCurso extends Controller {
 
         if (isset($_FILES["imagem"]) && $_FILES["imagem"]["error"] == 0) {
             $sNomeArquivo    = basename($_FILES["imagem"]["name"]);
-            $sNomeCurso      = filter_input(INPUT_POST, 'cursoNome');
-            $sDescricaoCurso = filter_input(INPUT_POST, 'cursoDescricao');
+            $sNomeCurso      = filter_input(INPUT_POST, 'nome');
+            $sDescricaoCurso = filter_input(INPUT_POST, 'descricao');
 
             // Lê o conteúdo da imagem em binário
             $imageData = file_get_contents($_FILES["imagem"]["tmp_name"]);
@@ -92,7 +94,7 @@ class ControllerCurso extends Controller {
         $curso = $this->carregaDadosCurso($args['codigo']);
 
         if ($curso) {
-            $this->render('ViewManutencaoCurso', ['curso' => $curso]);
+            $this->render('ViewManutencaoCurso', ['curso' => $curso, 'action' => Principal::getBaseUrl() . '/curso/alterar']);
         } else {
             echo "<script>alert('Curso não encontrado.'); window.location.href = '/cursos';</script>";
         }
@@ -146,22 +148,23 @@ class ControllerCurso extends Controller {
         if ($stmt->execute()) {
             echo "<script>alert('Curso alterado com sucesso!');</script>";
             $this->redirect('/cursos');
+            exit;
         } else {
             echo "<script>alert('Erro ao alterar o curso.');</script>";
             // Renderiza novamente a tela de manutenção com os dados informados pelo usuário
             $aCurso = [
-                'curcodigo'      => $iCodigo,
-                'curnome'        => $sNome,
-                'curdescricao'   => $sDescricao,
+                'codigo'      => $iCodigo,
+                'nome'        => $sNome,
+                'descricao'   => $sDescricao,
             ];
             // Se o nome do arquivo foi enviado, mantém o nome atual para exibição
             if (isset($sNomeArquivo)) {
-                $aCurso['curnomeimagem'] = $sNomeArquivo;
+                $aCurso['nomeimagem'] = $sNomeArquivo;
             } else {
                 // Busca o nome do arquivo atual no banco, se necessário
                 $cursoBanco = $this->carregaDadosCurso($iCodigo);
-                if (!empty($cursoBanco['curnomeimagem'])) {
-                    $aCurso['curnomeimagem'] = $cursoBanco['curnomeimagem'];
+                if (!empty($cursoBanco['nomeimagem'])) {
+                    $aCurso['nomeimagem'] = $cursoBanco['nomeimagem'];
                 }
             }
             $this->render('ViewManutencaoCurso', ['curso' => $aCurso]);
@@ -176,12 +179,11 @@ class ControllerCurso extends Controller {
         $stmt->bindParam(':codigo', $args['codigo'], PDO::PARAM_INT);
 
         if ($stmt->execute()) {
-            echo "<script>alert(Curso Excluído com Sucesso!'); /*window.location.href = '/cursos'*/;</script>";
-            $this->redirect('/cursos');
+            echo "<script>alert(Curso Excluído com Sucesso!');</script>";
         } else {
-            echo "<script>alert('Erro ao Excluir o Curso.'); /*window.location.href = '/cursos'*/;</script>";
-            exit;
+            echo "<script>alert('Erro ao Excluir o Curso.');</script>";
         }
+        $this->redirect('/cursos');
     }
 
     /* ==================================================================================================================================================================================================================== */

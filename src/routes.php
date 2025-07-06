@@ -19,10 +19,10 @@ $router->get('/curso/visualizar/{codigo}', 'ControllerCurso@show');
 
 /* VÍDEOS */
 
-$router->get('/curso/{codigoCurso}/videos', 'ControllerVideo@index');
-$router->get('/curso/{codigoCurso}/video/incluir', 'ControllerVideo@incluirVideo');
-$router->post('/curso/{codigoCurso}/video/incluir', 'ControllerVideo@create');
-$router->get('/curso/{codigoCurso}/video/alterar/{id}', 'ControllerVideo@edit');
+$router->get('/curso/{curso}/videos', 'ControllerVideo@index');
+$router->get('/curso/{curso}/video/incluir', 'ControllerVideo@incluirVideo');
+$router->post('/curso/{curso}/video/incluir', 'ControllerVideo@create');
+$router->get('/curso/{curso}/video/alterar/{codigo}', 'ControllerVideo@edit');
 $router->post('/video/alterar', 'ControllerVideo@update');
-$router->get('/video/excluir/{id}', 'ControllerVideo@delete');
-$router->get('/video/visualizar/{id}', 'ControllerVideo@show');  
+$router->get('/video/excluir/{codigo}', 'ControllerVideo@delete');
+$router->get('/video/visualizar/{codigo}', 'ControllerVideo@show');  

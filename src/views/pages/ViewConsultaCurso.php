@@ -37,31 +37,36 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($cursos as $curso): ?>
+                    <?php if (!empty($cursos)): ?>
+                        <?php foreach ($cursos as $curso): ?>
+                            <tr>
+                                <td><?= $curso['curcodigo'] ?></td>
+                                <td style="max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curnome'] ?></td>
+                                <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curdescricao'] ?></td>
+                                <td style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-center">
+                                    <a href="<?= $base ?>/curso/alterar/<?= $curso['curcodigo'] ?>" class="btn btn-warning btn-sm ms-2">Alterar</a>
+                                    <a href="<?= $base ?>/curso/visualizar/<?= $curso['curcodigo'] ?>" class="btn btn-info btn-sm ms-2">Visualizar</a>
+                                    <a href="<?= $base ?>/curso/excluir/<?= $curso['curcodigo'] ?>" class="btn btn-danger btn-sm ms-2">Excluir</a>
+                                    <a href="<?= $base ?>/curso/<?= $curso['curcodigo'] ?>/videos" class="btn btn-secondary btn-sm ms-2">Vídeos</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                            <td><?= $curso['curcodigo'] ?></td>
-                            <td style="max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curnome'] ?></td>
-                            <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curdescricao'] ?></td>
-                            <td style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-center">
-                                <a href="<?= $base ?>/curso/alterar/<?= $curso['curcodigo'] ?>" class="btn btn-warning btn-sm ms-2">Alterar</button>
-                                <a href="<?= $base ?>/curso/visualizar/<?= $curso['curcodigo'] ?>" class="btn btn-info btn-sm ms-2">Visualizar</button>
-                                <a href="<?= $base ?>/curso/excluir/<?= $curso['curcodigo'] ?>" class="btn btn-danger btn-sm ms-2">Excluir</button>
-                                <a href="<?= $base ?>/curso/<?= $curso['curcodigo'] ?>/videos" class="btn btn-secondary btn-sm ms-2">Vídeos</button>
-                            </td>
+                            <td colspan="4" class="text-center">Nenhum curso cadastrado.</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
 
     <!-- Paginação -->
+    <?php if (!empty($cursos) && isset($totalPaginas) && $totalPaginas > 1): ?>
     <nav aria-label="Navegação de página de cursos">
         <ul class="pagination justify-content-center mt-4">
             <?php
-                // Página anterior
                 $paginaAnterior = max(1, $paginaAtual - 1);
-                // Página seguinte
                 $paginaSeguinte = min($totalPaginas, $paginaAtual + 1);
             ?>
             <li class="page-item <?= ($paginaAtual <= 1) ? 'disabled' : '' ?>">
@@ -77,6 +82,7 @@
             </li>
         </ul>
     </nav>
+    <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

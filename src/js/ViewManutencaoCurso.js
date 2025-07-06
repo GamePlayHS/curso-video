@@ -1,6 +1,6 @@
 debugger;
 document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById("cursoImagem");
+    const input = document.getElementById("imagem");
 
     input.addEventListener("change", function () {
         debugger;

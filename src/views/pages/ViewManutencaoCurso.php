@@ -22,10 +22,10 @@ $visualizacao = isset($visualizacao) && $visualizacao === true;
     </nav>
 
     <div class="container mt-4">
-        <form action="<?= $base ?>/curso/incluir" method="POST" enctype="multipart/form-data">
+        <form action="<?= $action ?? '#' ?>" method="POST" enctype="multipart/form-data">
             <!-- Campo oculto para o código do curso -->
             <?php if (isset($curso['curcodigo'])): ?>
-                <input type="hidden" name="curcodigo" value="<?= htmlspecialchars($curso['curcodigo']) ?>">
+                <input type="hidden" name="codigo" value="<?= htmlspecialchars($curso['curcodigo']) ?>">
             <?php endif; ?>
 
             <!-- Nome do Curso -->
@@ -64,7 +64,7 @@ $visualizacao = isset($visualizacao) && $visualizacao === true;
         </form>
     </div>
 
-    <script src="<?= Principal::getPathJs() ?>incluir-curso.js"></script>
+    <script src="<?= Principal::getPathJs() ?>ViewManutencaoCurso.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

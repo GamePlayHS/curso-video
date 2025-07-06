@@ -16,7 +16,7 @@ class Model {
     public static function _checkH() {
         if(self::$_h == null) {
             $connection = Database::getInstance();
-            self::$_h = new Builder('pgsql', function($query, $queryString, $queryParameters) use($connection) {
+            self::$_h = new Builder('mysql', function($query, $queryString, $queryParameters) use($connection) {
                 $statement = $connection->prepare($queryString);
                 $statement->execute($queryParameters);
 
@@ -25,7 +25,6 @@ class Model {
                 }
             });
         }
-        
         self::$_h = self::$_h->table( self::getTableName() );
     }
 
