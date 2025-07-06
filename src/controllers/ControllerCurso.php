@@ -47,24 +47,25 @@ class ControllerCurso extends Controller {
      * @return void
      */
     public function show($args) {
-        $curso = $this->carregaDadosCurso($args['codigo']);
+        $curso = $this->carregaDadosCurso($args['codigo'] ?? null);
         if ($curso) {
-            $this->render('ViewManutencaoCurso', ['curso' => $curso]);
+            $this->render('ViewManutencaoCurso', ['curso' => $curso, 'visualizacao' => true]);
         } else {
-            echo "<script>alert('Curso não encontrado.'); window.location.href = '/cursos';</script>";
+            echo "<script>alert('Curso não encontrado.');</script>";
+            $this->redirect('/cursos');
         }
     }
 
     public function create() {
         $oConexao = Database::getInstance();
 
-        if (isset($_FILES["cursoImagem"]) && $_FILES["cursoImagem"]["error"] == 0) {
-            $sNomeArquivo    = basename($_FILES["cursoImagem"]["name"]);
+        if (isset($_FILES["imagem"]) && $_FILES["imagem"]["error"] == 0) {
+            $sNomeArquivo    = basename($_FILES["imagem"]["name"]);
             $sNomeCurso      = filter_input(INPUT_POST, 'cursoNome');
             $sDescricaoCurso = filter_input(INPUT_POST, 'cursoDescricao');
 
             // Lê o conteúdo da imagem em binário
-            $imageData = file_get_contents($_FILES["cursoImagem"]["tmp_name"]);
+            $imageData = file_get_contents($_FILES["imagem"]["tmp_name"]);
 
             // Exemplo de inserção no banco (ajuste conforme sua tabela)
             $stmt = $oConexao->prepare("INSERT INTO tbcurso (curnome, curdescricao, curimagem, curnomeimagem, curtipoimagem) VALUES (:nome, :descricao, :imagem, :nomeImagem, :tipoImagem)");
@@ -72,16 +73,18 @@ class ControllerCurso extends Controller {
             $stmt->bindParam(':descricao' , $sDescricaoCurso);
             $stmt->bindParam(':imagem'    , $imageData, PDO::PARAM_LOB);
             $stmt->bindParam(':nomeImagem', $sNomeArquivo);
-            $stmt->bindParam(':tipoImagem', $_FILES["cursoImagem"]["type"]);
+            $stmt->bindParam(':tipoImagem', $_FILES["imagem"]["type"]);
 
             if ($stmt->execute()) {
+                echo "<script>alert('Curso Inserido com Sucesso!');</script>";
                 $this->redirect('/cursos');
-                exit("Curso Inserido com Sucesso!");
             } else {
-                echo "<script>alert('Erro ao Salvar o Curso.'); window.location.href = '/cursos';</script>";
+                echo "<script>alert('Erro ao Salvar o Curso.');</script>";
+                $this->redirect('/curso/incluir');
             }
         } else {
-            echo "<script>alert('Nenhum arquivo enviado ou ocorreu um erro.'); window.location.href = '/cursos';</script>";
+            echo "<script>alert('Nenhum arquivo enviado ou ocorreu um erro.');</script>";
+            $this->redirect('/curso/incluir');
         }
     }
 
@@ -95,8 +98,74 @@ class ControllerCurso extends Controller {
         }
     }
 
-    public function update($args) {
-        // Atualiza um curso existente
+    /**
+     * Altera as Informações do Curso
+     * @return void
+     */
+    public function update() {
+        $oConexao = Database::getInstance();
+
+        $iCodigo    = filter_input(INPUT_POST, 'codigo', FILTER_VALIDATE_INT);
+        $sNome      = filter_input(INPUT_POST, 'nome');
+        $sDescricao = filter_input(INPUT_POST, 'descricao');
+
+        // Verifica se foi enviado um novo arquivo de imagem
+        if (isset($_FILES["imagem"]) && $_FILES["imagem"]["error"] == 0) {
+            $sNomeArquivo = basename($_FILES["imagem"]["name"]);
+            $imageData    = file_get_contents($_FILES["imagem"]["tmp_name"]);
+            $tipoImagem   = $_FILES["imagem"]["type"];
+
+            $stmt = $oConexao->prepare(
+                "UPDATE tbcurso" . PHP_EOL .
+                "   SET curnome = :nome," . PHP_EOL .
+                "       curdescricao = :descricao," . PHP_EOL .
+                "       curimagem = :imagem," . PHP_EOL .
+                "       curnomeimagem = :nomeImagem," . PHP_EOL .
+                "       curtipoimagem = :tipoImagem" . PHP_EOL .
+                " WHERE curcodigo = :codigo"
+            );
+            $stmt->bindParam(':nome'      , $sNome);
+            $stmt->bindParam(':descricao' , $sDescricao);
+            $stmt->bindParam(':imagem'    , $imageData, PDO::PARAM_LOB);
+            $stmt->bindParam(':nomeImagem', $sNomeArquivo);
+            $stmt->bindParam(':tipoImagem', $tipoImagem);
+            $stmt->bindParam(':codigo'    , $iCodigo, PDO::PARAM_INT);
+        } else {
+            // Não altera a imagem se não foi enviada uma nova
+            $stmt = $oConexao->prepare(
+                "UPDATE tbcurso" . PHP_EOL .
+                "   SET curnome = :nome," . PHP_EOL .
+                "       curdescricao = :descricao" . PHP_EOL .
+                " WHERE curcodigo = :codigo"
+            );
+            $stmt->bindParam(':nome', $sNome);
+            $stmt->bindParam(':descricao', $sDescricao);
+            $stmt->bindParam(':codigo', $iCodigo, PDO::PARAM_INT);
+        }
+
+        if ($stmt->execute()) {
+            echo "<script>alert('Curso alterado com sucesso!');</script>";
+            $this->redirect('/cursos');
+        } else {
+            echo "<script>alert('Erro ao alterar o curso.');</script>";
+            // Renderiza novamente a tela de manutenção com os dados informados pelo usuário
+            $aCurso = [
+                'curcodigo'      => $iCodigo,
+                'curnome'        => $sNome,
+                'curdescricao'   => $sDescricao,
+            ];
+            // Se o nome do arquivo foi enviado, mantém o nome atual para exibição
+            if (isset($sNomeArquivo)) {
+                $aCurso['curnomeimagem'] = $sNomeArquivo;
+            } else {
+                // Busca o nome do arquivo atual no banco, se necessário
+                $cursoBanco = $this->carregaDadosCurso($iCodigo);
+                if (!empty($cursoBanco['curnomeimagem'])) {
+                    $aCurso['curnomeimagem'] = $cursoBanco['curnomeimagem'];
+                }
+            }
+            $this->render('ViewManutencaoCurso', ['curso' => $aCurso]);
+        }
     }
 
     public function delete($args) {

@@ -43,9 +43,10 @@
                             <td style="max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curnome'] ?></td>
                             <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curdescricao'] ?></td>
                             <td style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-center">
-                                <a href="<?= $base ?>/curso/alterar/<?= $curso['curcodigo'] ?>" class="btn btn-warning btn-sm">Alterar</button>
-                                <a href="<?= $base ?>/curso/visualizar/<?= $curso['curcodigo'] ?>" class="btn btn-info btn-sm">Visualizar</button>
-                                <a href="<?= $base ?>/curso/excluir/<?= $curso['curcodigo'] ?>" class="btn btn-danger btn-sm">Excluir</button>
+                                <a href="<?= $base ?>/curso/alterar/<?= $curso['curcodigo'] ?>" class="btn btn-warning btn-sm ms-2">Alterar</button>
+                                <a href="<?= $base ?>/curso/visualizar/<?= $curso['curcodigo'] ?>" class="btn btn-info btn-sm ms-2">Visualizar</button>
+                                <a href="<?= $base ?>/curso/excluir/<?= $curso['curcodigo'] ?>" class="btn btn-danger btn-sm ms-2">Excluir</button>
+                                <a href="<?= $base ?>/curso/<?= $curso['curcodigo'] ?>/videos" class="btn btn-secondary btn-sm ms-2">Vídeos</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
