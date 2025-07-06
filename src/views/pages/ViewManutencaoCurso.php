@@ -6,7 +6,7 @@ use core\Principal;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Incluir Curso</title>
+    <title>Curso</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 
@@ -14,30 +14,36 @@ use core\Principal;
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">Incluir Curso</a>
+            <a class="navbar-brand" href="#">Curso</a>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <h2 class="text-center">Cadastro de Curso</h2>
-
         <form action="<?= $base ?>/curso/incluir" method="POST" enctype="multipart/form-data">
+            <!-- Campo oculto para o código do curso -->
+            <?php if (isset($curso['curcodigo'])): ?>
+                <input type="hidden" name="curcodigo" value="<?= htmlspecialchars($curso['curcodigo']) ?>">
+            <?php endif; ?>
+
             <!-- Nome do Curso -->
             <div class="mb-3">
                 <label for="cursoNome" class="form-label">Nome do Curso</label>
-                <input type="text" class="form-control" id="cursoNome" name="cursoNome" maxlength="100" required>
+                <input type="text" class="form-control" id="cursoNome" name="cursoNome" maxlength="100" required value="<?= $curso['curnome'] ?? '' ?>">
             </div>
 
             <!-- Descrição -->
             <div class="mb-3">
                 <label for="cursoDescricao" class="form-label">Descrição</label>
-                <textarea class="form-control" id="cursoDescricao" name="cursoDescricao" rows="4" required></textarea>
+                <textarea class="form-control" id="cursoDescricao" name="cursoDescricao" rows="4" required><?= $curso['curdescricao'] ?? '' ?></textarea>
             </div>
 
             <!-- Imagem do Curso -->
             <div class="mb-3">
                 <label for="cursoImagem" class="form-label">Imagem do Curso</label>
                 <input type="file" class="form-control" id="cursoImagem" name="cursoImagem" accept=".png, .jpg" required>
+                <?php if (isset($curso['curnomeimagem'])): ?>
+                    <small class="text-muted">Arquivo atual: <?= htmlspecialchars($curso['curnomeimagem']) ?></small>
+                <?php endif; ?>
             </div>
 
 
