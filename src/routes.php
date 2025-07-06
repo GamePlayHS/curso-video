@@ -5,7 +5,12 @@ $router = new Router();
 
 /* HOME */
 
-$router->get('/', 'HomeController@index');
+$router->get('/', 'ControllerHome@index');
+$router->get('/login', 'ControllerLogin@index');
+$router->get('/loginInvalido', 'ControllerLogin@index');
+$router->post('/login', 'ControllerLogin@login');
+$router->get('/register', 'ControllerUserRegister@index');
+$router->post('/register', 'ControllerUserRegister@register');
 
 /* CURSOS */
 

@@ -4,6 +4,17 @@ namespace core;
 
 class Controller {
 
+    public function __construct() {
+        // Lista de rotas públicas (ajuste conforme necessário)
+        $rotasPublicas = ['/curso-video/public/login', '/curso-video/public/loginInvalido', '/curso-video/public/register'];
+        $rotaAtual     = $_SERVER['REQUEST_URI'];
+
+        // Se não estiver logado e não for rota pública, redireciona
+        if (empty($_SESSION['usuario']) && !in_array($rotaAtual, $rotasPublicas)) {
+            $this->redirect('/login');
+        }
+    }
+
     protected function redirect($url) {
         header("Location: " . Principal::getBaseUrl() . $url);
         exit;

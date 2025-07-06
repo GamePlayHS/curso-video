@@ -3,10 +3,10 @@ namespace src\controllers;
 
 use \core\Controller;
 
-class HomeController extends Controller {
+class ControllerHome extends Controller {
 
     public function index() {
-        $this->render('home');
+        $this->render('ViewHome');
     }
 
 }
