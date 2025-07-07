@@ -44,7 +44,8 @@ $visualizacao = isset($visualizacao) && $visualizacao === true;
             <?php if (!$visualizacao): ?>
             <div class="mb-3">
                 <label for="imagem" class="form-label">Imagem do Curso</label>
-                <input type="file" class="form-control" id="imagem" name="imagem" accept=".png, .jpg">
+                <input type="file" class="form-control" id="imagem" name="imagem" accept=".png, .jpg" <?= $visualizacao ? 'disabled' : '' ?>>
+                <div class="form-text text-danger" id="imagem-erro" style="display:none;">Apenas arquivos .jpg e .png são permitidos.</div>
                 <?php if (isset($curso['curnomeimagem'])): ?>
                     <small class="text-muted">Arquivo atual: <?= htmlspecialchars($curso['curnomeimagem']) ?></small>
                 <?php endif; ?>
@@ -64,7 +65,7 @@ $visualizacao = isset($visualizacao) && $visualizacao === true;
         </form>
     </div>
 
-    <script src="<?= Principal::getPathJs() ?>ViewManutencaoCurso.js"></script>
+    <script src="<?= Principal::getPathJs() ?>/ViewManutencaoCurso.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -27,20 +27,27 @@ use core\Principal;
                     <div class="card-body">
                         <h2 class="mb-4 text-center">Adicionar Novo Vídeo</h2>
                         <form action="<?= $action ?>" method="post" enctype="multipart/form-data">
-                            <div class="mb-3">
-                                <label for="titulo" class="form-label">Título</label>
-                                <input type="text" class="form-control" id="titulo" name="titulo" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="descricao" class="form-label">Descrição</label>
-                                <textarea class="form-control" id="descricao" name="descricao" rows="3"
-                                    required></textarea>
-                            </div>
-                            <div class="mb-3" id="campo-arquivo">
-                                <label for="arquivo" class="form-label">Arquivo de Vídeo (.mp4)</label>
-                                <input type="file" class="form-control" id="arquivo" name="arquivo" accept=".mp4" required>
-                                <div class="form-text text-danger" id="arquivo-erro" style="display:none;">Apenas arquivos .mp4 são permitidos.</div>
-                            </div>
+
+                            <!-- Fieldset Questionário -->
+                            <fieldset class="border rounded-3 p-3 mb-3">
+                                <legend class="float-none w-auto px-2">Questionário</legend>
+                                <div class="mb-3">
+                                    <label for="questao" class="form-label">Questão</label>
+                                    <textarea class="form-control" id="questao" name="questao" rows="2" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Alternativas</label> 
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-text">
+                                                <input class="form-check-input mt-0" type="radio" name="correta" value="<?= $i ?>" <?= $i === 1 ? 'checked' : '' ?> required title="Marque como correta">
+                                            </div>
+                                            <input type="text" class="form-control" name="alternativa[]" placeholder="Alternativa <?= $i ?>" maxlength="255" required>
+                                        </div>
+                                    <?php endfor; ?>
+                                    <div class="form-text">Selecione qual alternativa é a correta.</div>
+                                </div>
+                            </fieldset>
 
                             <div class="d-flex justify-content-end">
                                 <button type="submit" class="btn btn-success">Salvar Vídeo</button>

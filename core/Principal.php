@@ -23,6 +23,11 @@ class Principal {
         return $base;
     }
 
+    private static function getPathRoot() {
+        $path = dirname(__DIR__);
+        return str_replace('\\', '/', $path);
+    }
+
     /**
      * Retorna a URL Base
      * @return string
@@ -36,7 +41,15 @@ class Principal {
      * @return string
      */
     public static function getPathJs() {
-        return self::getPathBase()  . '/curso-video/src/js/';
+        return self::getPathBase()  . '/curso-video/src/js';
+    }
+
+    /**
+     * Retorna o Path de Acesso aos Arquivos Java Script
+     * @return string
+     */
+    public static function getPathUpload() {
+        return self::getPathRoot()  . '/uploads';
     }
 
 }

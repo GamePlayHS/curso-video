@@ -54,7 +54,7 @@ use core\Principal;
     </div>
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<?= Principal::getPathJs() ?>ViewUserRegister.js"></script>
+    <script src="<?= Principal::getPathJs() ?>/ViewRegisterUsuario.js"></script>
 </body>
 
 </html>

@@ -12,6 +12,18 @@ use core\Principal;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">Vídeos do Curso</a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light" href="<?= $base ?>/cursos">Cursos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="container mt-4">
         <h1 class="mb-4 text-center">Consulta de Vídeos</h1>
         <div class="mb-3">
@@ -24,7 +36,7 @@ use core\Principal;
                         <th>ID</th>
                         <th>Título</th>
                         <th>Descrição</th>
-                        <th>URL</th>
+                        <th>Duração</th>
                         <th class="text-center">Ações</th>
                     </tr>
                 </thead>
@@ -32,18 +44,19 @@ use core\Principal;
                     <?php if (!empty($videos)): ?>
                         <?php foreach ($videos as $video): ?>
                             <tr>
-                                <td><?= htmlspecialchars($video['codigo']) ?></td>
-                                <td><?= htmlspecialchars($video['titulo']) ?></td>
+                                <td><?= htmlspecialchars($video['vidcodigo']) ?></td>
+                                <td><?= htmlspecialchars($video['vidtitulo']) ?></td>
                                 <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    <?= htmlspecialchars($video['descricao']) ?>
+                                    <?= htmlspecialchars($video['viddescricao']) ?>
                                 </td>
                                 <td>
-                                    <a href="<?= htmlspecialchars($video['url']) ?>" target="_blank" class="btn btn-link">Assistir</a>
+                                    <?= gmdate('H:i:s', $video['vidduracao']) ?>
                                 </td>
                                 <td class="text-center">
-                                    <a href="/videos/visualizar/<?= $video['id'] ?>" class="btn btn-info btn-sm">Visualizar</a>
-                                    <a href="/videos/alterar/<?= $video['id'] ?>" class="btn btn-warning btn-sm">Alterar</a>
-                                    <a href="/videos/excluir/<?= $video['id'] ?>" class="btn btn-danger btn-sm btn-excluir-video">Excluir</a>
+                                    <a href="curso/<?= $video['vidcodigo'] ?>/video/visualizar/<?= $video['vidcodigo'] ?>" class="btn btn-info btn-sm">Visualizar</a>
+                                    <a href="curso/<?= $video['vidcodigo'] ?>/video/alterar/<?= $video['vidcodigo'] ?>" class="btn btn-warning btn-sm">Alterar</a>
+                                    <a href="curso/<?= $video['vidcodigo'] ?>/video/excluir/<?= $video['vidcodigo'] ?>" class="btn btn-danger btn-sm btn-excluir-video">Excluir</a>
+                                    <a href="curso/<?= $video['vidcodigo'] ?>/video/<?= $video['vidcodigo'] ?>/questionario" class="btn btn-danger btn-sm">Questionário</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -82,7 +95,7 @@ use core\Principal;
         </div>
     </div>
 
-    <script src="<?= Principal::getPathJs() ?>ViewConsultaVideo.js"></script>
+    <script src="<?= Principal::getPathJs() ?>/ViewConsultaVideo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

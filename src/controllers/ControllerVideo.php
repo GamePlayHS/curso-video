@@ -5,7 +5,10 @@ namespace Src\Controllers;
 use core\Controller;
 use core\Database;
 use core\Principal;
+use getID3;
 use PDO;
+
+require_once dirname(__DIR__, 2) . '/core/getid3/getid3.php';
 
 class ControllerVideo extends Controller {
 
@@ -61,47 +64,48 @@ class ControllerVideo extends Controller {
     public function incluirVideo($args) {
         $this->render('ViewManutencaoVideo', [
             'codigoCurso' => $args['curso'] ?? null,
-            'action' => Principal::getBaseUrl() . '/curso/' . ($args['curso'] ?? null) . '/videos/incluir',
+            'action' => Principal::getBaseUrl() . '/curso/' . ($args['curso'] ?? null) . '/video/incluir',
         ]);
     }
 
-    public function create() {
+    public function create($args) {
         $oConexao = Database::getInstance();
-        $titulo = filter_input(INPUT_POST, 'titulo', FILTER_SANITIZE_STRING);
-        $descricao = filter_input(INPUT_POST, 'descricao', FILTER_SANITIZE_STRING);
-        $tipoVideo = filter_input(INPUT_POST, 'tipo_video', FILTER_SANITIZE_STRING);
-        $cursoCodigo = filter_input(INPUT_POST, 'curso_codigo', FILTER_VALIDATE_INT);
+        $titulo = htmlspecialchars(filter_input(INPUT_POST, 'titulo'));
+        $descricao = htmlspecialchars(filter_input(INPUT_POST, 'descricao'));
+        $cursoCodigo = $args['curso'];
 
-        if ($tipoVideo === 'arquivo' && isset($_FILES['arquivo']) && $_FILES['arquivo']['error'] === UPLOAD_ERR_OK) {
+        if (isset($_FILES['arquivo']) && $_FILES['arquivo']['error'] === UPLOAD_ERR_OK) {
             // Diretório onde os vídeos serão salvos
-            $diretorio = __DIR__ . '/../../../public/videos/';
+            $diretorio = Principal::getPathUpload() . '/curso_' . $cursoCodigo;
             if (!is_dir($diretorio)) {
                 mkdir($diretorio, 0777, true);
             }
 
-            $nomeArquivo = uniqid('video_') . '_' . basename($_FILES['arquivo']['name']);
-            $caminhoRelativo = 'videos/' . $nomeArquivo;
-            $caminhoCompleto = $diretorio . $nomeArquivo;
+            $nomeArquivo = uniqid() . '_' . basename($_FILES['arquivo']['name']);
+            $caminhoRelativo = 'curso_' . $cursoCodigo . '/' . $nomeArquivo;
+            $caminhoCompleto = $diretorio . '/' . $nomeArquivo;
 
             if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $caminhoCompleto)) {
-                $stmt = $oConexao->prepare("INSERT INTO tbvideo (vidtitulo, viddescricao, vidtipo, vidcaminho, curcodigo) VALUES (:titulo, :descricao, :tipo, :caminho, :curso)");
+                $getID3 = new getID3();
+                $fileInfo = $getID3->analyze($caminhoCompleto);
+                $duracaoSegundos = isset($fileInfo['playtime_seconds']) ? $fileInfo['playtime_seconds'] : null;
+    
+                $stmt = $oConexao->prepare("INSERT INTO tbvideo (vidtitulo, viddescricao, vidcaminho, vidduracao, curcodigo) VALUES (:titulo, :descricao, :caminho, :duracao, :curso)");
+                $stmt->bindValue(':titulo', $titulo);
+                $stmt->bindValue(':descricao', $descricao);
                 $stmt->bindValue(':caminho', $caminhoRelativo);
+                $stmt->bindValue(':duracao', $duracaoSegundos);
+                $stmt->bindValue(':curso', (int)$cursoCodigo);
             } else {
                 echo "<script>alert('Erro ao salvar o arquivo de vídeo.');</script>";
                 $this->redirect('/curso/' . (int)$cursoCodigo . '/videos');
                 return;
             }
         } else {
-            $url = filter_input(INPUT_POST, 'url', FILTER_SANITIZE_URL);
-            $stmt = $oConexao->prepare("INSERT INTO tbvideo (vidtitulo, viddescricao, vidtipo, vidurl, curcodigo) VALUES (:titulo, :descricao, :tipo, :url, :curso)");
-            $stmt->bindValue(':url', $url);
+            echo "<script>alert('Tipo de vídeo não suportado ou arquivo não enviado.');</script>";
+            $this->redirect('/curso/' . (int)$cursoCodigo . '/videos');
+            return;
         }
-
-        // Bind dos outros parâmetros
-        $stmt->bindValue(':titulo', $titulo);
-        $stmt->bindValue(':descricao', $descricao);
-        $stmt->bindValue(':tipo', $tipoVideo);
-        $stmt->bindValue(':curso', (int)$cursoCodigo);
 
         if ($stmt->execute()) {
             echo "<script>alert('Vídeo cadastrado com sucesso.');</script>";
