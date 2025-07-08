@@ -44,19 +44,15 @@ use core\Principal;
                     <?php if (!empty($videos)): ?>
                         <?php foreach ($videos as $video): ?>
                             <tr>
-                                <td><?= htmlspecialchars($video['vidcodigo']) ?></td>
-                                <td><?= htmlspecialchars($video['vidtitulo']) ?></td>
-                                <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    <?= htmlspecialchars($video['viddescricao']) ?>
-                                </td>
-                                <td>
-                                    <?= gmdate('H:i:s', $video['vidduracao']) ?>
-                                </td>
-                                <td class="text-center">
-                                    <a href="curso/<?= $video['vidcodigo'] ?>/video/visualizar/<?= $video['vidcodigo'] ?>" class="btn btn-info btn-sm">Visualizar</a>
-                                    <a href="curso/<?= $video['vidcodigo'] ?>/video/alterar/<?= $video['vidcodigo'] ?>" class="btn btn-warning btn-sm">Alterar</a>
-                                    <a href="curso/<?= $video['vidcodigo'] ?>/video/excluir/<?= $video['vidcodigo'] ?>" class="btn btn-danger btn-sm btn-excluir-video">Excluir</a>
-                                    <a href="curso/<?= $video['vidcodigo'] ?>/video/<?= $video['vidcodigo'] ?>/questionario" class="btn btn-danger btn-sm">Questionário</a>
+                                <td style="width: 30rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($video['vidcodigo']) ?></td>
+                                <td style="width: 100rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($video['vidtitulo']) ?></td>
+                                <td style="width: 600rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($video['viddescricao']) ?></td>
+                                <td style="max-width: 50rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= gmdate('H:i:s', $video['vidduracao']) ?></td>
+                                <td style="width: 75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-center">
+                                    <a href="<?= $base ?>/curso/<?= $video['curcodigo'] ?>/video/visualizar/<?= $video['vidcodigo'] ?>" class="btn btn-info btn-sm">Visualizar</a>
+                                    <a href="<?= $base ?>/curso/<?= $video['curcodigo'] ?>/video/alterar/<?= $video['vidcodigo'] ?>" class="btn btn-warning btn-sm">Alterar</a>
+                                    <a href="<?= $base ?>/curso/<?= $video['curcodigo'] ?>/video/excluir/<?= $video['vidcodigo'] ?>" class="btn btn-danger btn-sm btn-excluir-video">Excluir</a>
+                                    <a href="<?= $base ?>/curso/<?= $video['curcodigo'] ?>/video/<?= $video['vidcodigo'] ?>/questionario" class="btn btn-secondary btn-sm">Questionário</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

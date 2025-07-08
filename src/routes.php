@@ -36,6 +36,10 @@ $router->get('/curso/{curso}/videos', 'ControllerVideo@index');
 $router->get('/curso/{curso}/video/incluir', 'ControllerVideo@incluirVideo');
 $router->post('/curso/{curso}/video/incluir', 'ControllerVideo@create');
 $router->get('/curso/{curso}/video/alterar/{codigo}', 'ControllerVideo@edit');
-$router->post('/video/alterar', 'ControllerVideo@update');
-$router->get('/video/excluir/{codigo}', 'ControllerVideo@delete');
-$router->get('/video/visualizar/{codigo}', 'ControllerVideo@show');  
+$router->post('/curso/{curso}/video/alterar/{codigo}', 'ControllerVideo@update');
+$router->get('/curso/{curso}/video/excluir/{codigo}', 'ControllerVideo@delete');
+$router->get('/curso/{curso}/video/visualizar/{codigo}', 'ControllerVideo@show');
+
+/* QUESTIONÁRIO */
+
+$router->get('/curso/{curso}/video/{codigo}/questionario', 'ControllerQuestionario@incluirQuestionario');

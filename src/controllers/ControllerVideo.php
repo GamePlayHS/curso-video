@@ -117,29 +117,175 @@ class ControllerVideo extends Controller {
         $this->redirect('/curso/' . (int)$cursoCodigo . '/videos');
     }
 
+    public function show($args) {
+        $oConexao = Database::getInstance();
+        $iCodigoCurso = $args['curso'] ?? null;
+        $iCodigoVideo = $args['codigo'] ?? null;
+
+        if ($iCodigoCurso && $iCodigoVideo) {
+            $stmt = $oConexao->prepare("SELECT * FROM tbvideo WHERE vidcodigo = :codigoVideo AND curcodigo = :codigoCurso");
+            $stmt->bindValue(':codigoCurso', $iCodigoCurso, PDO::PARAM_INT);
+            $stmt->bindValue(':codigoVideo', $iCodigoVideo, PDO::PARAM_INT);
+            $stmt->execute();
+            $video = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($video) {
+                // Renderiza a view de visualização do vídeo
+                $this->render('ViewManutencaoVideo', [
+                    'video' => $video,
+                    'caminhoCompleto' => Principal::getPathUpload() . '/' . $video['vidcaminho'],
+                    'codigoCurso' => $iCodigoCurso,
+                    'visualizacao' => true,
+                ]);
+                return;
+            } else {
+                echo "<script>alert('Vídeo não encontrado.');</script>";
+            }
+        } else {
+            echo "<script>alert('ID do vídeo inválido.');</script>";
+        }
+        $this->redirect('/cursos');
+    }
+
     public function edit($args) {
-        // Lógica para exibir formulário de edição de vídeo
-    }
-
-    public function update($args) {
-        // Lógica para atualizar um vídeo existente
-    }
-
-    public function delete($args) {
-        // Lógica para deletar um vídeo
         $oConexao = Database::getInstance();
         $id = isset($args['codigo']) ? (int)$args['codigo'] : null;
 
         if ($id) {
-            $stmt = $oConexao->prepare("DELETE FROM tbvideo WHERE vidcodigo = :id");
-            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                echo "<script>alert('Vídeo excluído com sucesso.');</script>";
+            $stmt = $oConexao->prepare("SELECT * FROM tbvideo WHERE vidcodigo = :codigo");
+            $stmt->bindValue(':codigo', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $video = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($video) {
+                $this->render('ViewManutencaoVideo', [
+                    'video' => $video,
+                    'codigoCurso' => $video['curcodigo'],
+                    'action' => Principal::getBaseUrl() . '/curso/' . $video['curcodigo'] . '/video/alterar/' . $video['vidcodigo'],
+                    'alteracao' => true
+                ]);
+                return;
             } else {
-                echo "<script>alert('Erro ao excluir o vídeo.');</script>";
+                echo "<script>alert('Vídeo não encontrado.');</script>";
             }
         } else {
             echo "<script>alert('ID do vídeo inválido.');</script>";
+        }
+        $this->redirect('/cursos');
+    }
+
+    public function update($args) {
+        $oConexao = Database::getInstance();
+        $id = isset($args['codigo']) ? (int)$args['codigo'] : null;
+        $cursoCodigo = isset($args['curso']) ? (int)$args['curso'] : null;
+
+        if (!$id || !$cursoCodigo) {
+            echo "<script>alert('Dados inválidos para alteração.');</script>";
+            $this->redirect('/curso/' . $cursoCodigo . '/videos');
+            return;
+        }
+
+        // Carrega os dados atuais do vídeo
+        $stmt = $oConexao->prepare("SELECT * FROM tbvideo WHERE vidcodigo = :id");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $video = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$video) {
+            echo "<script>alert('Vídeo não encontrado.');</script>";
+            $this->redirect('/curso/' . $cursoCodigo . '/videos');
+            return;
+        }
+
+        // Carrega os dados do formulário
+        $titulo = htmlspecialchars(filter_input(INPUT_POST, 'titulo'));
+        $descricao = htmlspecialchars(filter_input(INPUT_POST, 'descricao'));
+
+        $novoCaminhoRelativo = $video['vidcaminho'];
+        $novaDuracao = $video['vidduracao'];
+
+        // Se um novo arquivo foi anexado, substitui o antigo
+        if (isset($_FILES['arquivo']) && $_FILES['arquivo']['error'] === UPLOAD_ERR_OK) {
+            $diretorio = Principal::getPathUpload() . '/curso_' . $cursoCodigo;
+            if (!is_dir($diretorio)) {
+                mkdir($diretorio, 0777, true);
+            }
+
+            // Remove o arquivo antigo, se existir
+            $caminhoAntigo = $diretorio . '/' . basename($video['vidcaminho']);
+            if (is_file($caminhoAntigo)) {
+                unlink($caminhoAntigo);
+            }
+
+            $nomeArquivo = uniqid() . '_' . basename($_FILES['arquivo']['name']);
+            $novoCaminhoRelativo = 'curso_' . $cursoCodigo . '/' . $nomeArquivo;
+            $novoCaminhoCompleto = $diretorio . '/' . $nomeArquivo;
+
+            if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $novoCaminhoCompleto)) {
+                $getID3 = new \getID3();
+                $fileInfo = $getID3->analyze($novoCaminhoCompleto);
+                $novaDuracao = isset($fileInfo['playtime_seconds']) ? $fileInfo['playtime_seconds'] : null;
+            } else {
+                echo "<script>alert('Erro ao salvar o novo arquivo de vídeo.');</script>";
+                $this->redirect('/curso/' . $cursoCodigo . '/videos');
+                return;
+            }
+        }
+
+        // Atualiza os dados no banco
+        $stmt = $oConexao->prepare("UPDATE tbvideo SET vidtitulo = :titulo, viddescricao = :descricao, vidcaminho = :caminho, vidduracao = :duracao WHERE vidcodigo = :id");
+        $stmt->bindValue(':titulo', $titulo);
+        $stmt->bindValue(':descricao', $descricao);
+        $stmt->bindValue(':caminho', $novoCaminhoRelativo);
+        $stmt->bindValue(':duracao', $novaDuracao);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            echo "<script>alert('Vídeo alterado com sucesso.');</script>";
+        } else {
+            echo "<script>alert('Erro ao alterar o vídeo.');</script>";
+        }
+
+        $this->redirect('/curso/' . $cursoCodigo . '/videos');
+    }
+
+    public function delete($args) {
+        $oConexao = Database::getInstance();
+        $iCodigoCurso = $args['curso'] ?? null;
+        $iCodigoVideo = $args['codigo'] ?? null;
+
+        if ($iCodigoCurso && $iCodigoVideo) {
+            // Busca o caminho do arquivo antes de excluir do banco
+            $stmt = $oConexao->prepare("SELECT vidcaminho, curcodigo FROM tbvideo WHERE curcodigo = :codigoCurso and vidcodigo = :codigoVideo");
+            $stmt->bindValue(':codigoCurso', $iCodigoCurso, PDO::PARAM_INT);
+            $stmt->bindValue(':codigoVideo', $iCodigoVideo, PDO::PARAM_INT);
+            $stmt->execute();
+            $video = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($video) {
+                // Monta o caminho físico do arquivo
+                $diretorio = Principal::getPathUpload() . '/curso_' . $video['curcodigo'];
+                $caminhoFisico = $diretorio . '/' . basename($video['vidcaminho']);
+
+                // Exclui o arquivo se existir
+                if (is_file($caminhoFisico)) {
+                    unlink($caminhoFisico);
+                }
+
+                // Exclui do banco
+                $stmt = $oConexao->prepare("DELETE FROM tbvideo WHERE curcodigo = :codigoCurso and vidcodigo = :codigoVideo");
+                $stmt->bindValue(':codigoCurso', $iCodigoCurso, PDO::PARAM_INT);
+                $stmt->bindValue(':codigoVideo', $iCodigoVideo, PDO::PARAM_INT);
+                if ($stmt->execute()) {
+                    echo "<script>alert('Vídeo excluído com sucesso.');</script>";
+                } else {
+                    echo "<script>alert('Erro ao excluir o vídeo.');</script>";
+                }
+            } else {
+                echo "<script>alert('Vídeo não encontrado.');</script>";
+            }
+        } else {
+            echo "<script>alert('Código do vídeo inválido.');</script>";
         }
         $this->redirect('/cursos');
     }

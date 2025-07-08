@@ -35,26 +35,26 @@
         <!-- Grid de cursos com Bootstrap -->
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
-                <thead class="table-dark">
+                <thead class="table-dark text-center">
                     <tr>
                         <th>ID</th>
                         <th>Nome do Curso</th>
-                        <th>Descrição</th> <!-- Alterado de "Categoria" para "Descrição" -->
-                        <th class="text-center">Ações</th>
+                        <th>Descrição</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($cursos)): ?>
                         <?php foreach ($cursos as $curso): ?>
                             <tr>
-                                <td><?= $curso['curcodigo'] ?></td>
-                                <td style="max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curnome'] ?></td>
-                                <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curdescricao'] ?></td>
-                                <td style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-center">
-                                    <a href="<?= $base ?>/curso/alterar/<?= $curso['curcodigo'] ?>" class="btn btn-warning btn-sm ms-2">Alterar</a>
-                                    <a href="<?= $base ?>/curso/visualizar/<?= $curso['curcodigo'] ?>" class="btn btn-info btn-sm ms-2">Visualizar</a>
-                                    <a href="<?= $base ?>/curso/excluir/<?= $curso['curcodigo'] ?>" class="btn btn-danger btn-sm ms-2">Excluir</a>
-                                    <a href="<?= $base ?>/curso/<?= $curso['curcodigo'] ?>/videos" class="btn btn-secondary btn-sm ms-2">Vídeos</a>
+                                <td style="width: 30rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curcodigo'] ?></td>
+                                <td style="width: 100rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curnome'] ?></td>
+                                <td style="width: 600rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= $curso['curdescricao'] ?></td>
+                                <td style="width: 75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-center">
+                                    <a href="<?= $base ?>/curso/alterar/<?= $curso['curcodigo'] ?>" class="btn btn-warning btn-sm">Alterar</a>
+                                    <a href="<?= $base ?>/curso/visualizar/<?= $curso['curcodigo'] ?>" class="btn btn-info btn-sm">Visualizar</a>
+                                    <a href="<?= $base ?>/curso/excluir/<?= $curso['curcodigo'] ?>" class="btn btn-danger btn-sm">Excluir</a>
+                                    <a href="<?= $base ?>/curso/<?= $curso['curcodigo'] ?>/videos" class="btn btn-secondary btn-sm">Vídeos</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
