@@ -45,9 +45,9 @@ use core\Principal;
                         <?php foreach ($videos as $video): ?>
                             <tr>
                                 <td style="width: 30rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($video['vidcodigo']) ?></td>
-                                <td style="width: 100rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($video['vidtitulo']) ?></td>
-                                <td style="width: 600rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($video['viddescricao']) ?></td>
-                                <td style="max-width: 50rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= gmdate('H:i:s', $video['vidduracao']) ?></td>
+                                <td style="width: 200rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($video['vidtitulo']) ?></td>
+                                <td style="width: 500rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($video['viddescricao']) ?></td>
+                                <td style="width: 10rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= gmdate('H:i:s', $video['vidduracao']) ?></td>
                                 <td style="width: 75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-center">
                                     <a href="<?= $base ?>/curso/<?= $video['curcodigo'] ?>/video/visualizar/<?= $video['vidcodigo'] ?>" class="btn btn-info btn-sm">Visualizar</a>
                                     <a href="<?= $base ?>/curso/<?= $video['curcodigo'] ?>/video/alterar/<?= $video['vidcodigo'] ?>" class="btn btn-warning btn-sm">Alterar</a>

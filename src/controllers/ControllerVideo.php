@@ -65,6 +65,7 @@ class ControllerVideo extends Controller {
         $this->render('ViewManutencaoVideo', [
             'codigoCurso' => $args['curso'] ?? null,
             'action' => Principal::getBaseUrl() . '/curso/' . ($args['curso'] ?? null) . '/video/incluir',
+            'titulo' => 'Adicionar Novo Vídeo'
         ]);
     }
 
@@ -76,13 +77,13 @@ class ControllerVideo extends Controller {
 
         if (isset($_FILES['arquivo']) && $_FILES['arquivo']['error'] === UPLOAD_ERR_OK) {
             // Diretório onde os vídeos serão salvos
-            $diretorio = Principal::getPathUpload() . '/curso_' . $cursoCodigo;
+            $diretorio = Principal::getDiretorioUpload() . '/curso/' . $cursoCodigo . '/video/';
             if (!is_dir($diretorio)) {
                 mkdir($diretorio, 0777, true);
             }
 
             $nomeArquivo = uniqid() . '_' . basename($_FILES['arquivo']['name']);
-            $caminhoRelativo = 'curso_' . $cursoCodigo . '/' . $nomeArquivo;
+            $caminhoRelativo = 'curso/' . $cursoCodigo . '/video/' . $nomeArquivo;
             $caminhoCompleto = $diretorio . '/' . $nomeArquivo;
 
             if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $caminhoCompleto)) {
@@ -136,6 +137,7 @@ class ControllerVideo extends Controller {
                     'caminhoCompleto' => Principal::getPathUpload() . '/' . $video['vidcaminho'],
                     'codigoCurso' => $iCodigoCurso,
                     'visualizacao' => true,
+                    'titulo' => 'Visualizar Vídeo'
                 ]);
                 return;
             } else {
@@ -160,9 +162,11 @@ class ControllerVideo extends Controller {
             if ($video) {
                 $this->render('ViewManutencaoVideo', [
                     'video' => $video,
+                    'caminhoCompleto' => Principal::getPathUpload() . '/' . $video['vidcaminho'],
                     'codigoCurso' => $video['curcodigo'],
                     'action' => Principal::getBaseUrl() . '/curso/' . $video['curcodigo'] . '/video/alterar/' . $video['vidcodigo'],
-                    'alteracao' => true
+                    'alteracao' => true,
+                    'titulo' => 'Alterar Vídeo'
                 ]);
                 return;
             } else {
@@ -201,12 +205,12 @@ class ControllerVideo extends Controller {
         $titulo = htmlspecialchars(filter_input(INPUT_POST, 'titulo'));
         $descricao = htmlspecialchars(filter_input(INPUT_POST, 'descricao'));
 
-        $novoCaminhoRelativo = $video['vidcaminho'];
+        $caminhoRelativo = $video['vidcaminho'];
         $novaDuracao = $video['vidduracao'];
 
         // Se um novo arquivo foi anexado, substitui o antigo
         if (isset($_FILES['arquivo']) && $_FILES['arquivo']['error'] === UPLOAD_ERR_OK) {
-            $diretorio = Principal::getPathUpload() . '/curso_' . $cursoCodigo;
+            $diretorio = Principal::getDiretorioUpload() . '/curso/' . $cursoCodigo . '/video/';
             if (!is_dir($diretorio)) {
                 mkdir($diretorio, 0777, true);
             }
@@ -218,12 +222,12 @@ class ControllerVideo extends Controller {
             }
 
             $nomeArquivo = uniqid() . '_' . basename($_FILES['arquivo']['name']);
-            $novoCaminhoRelativo = 'curso_' . $cursoCodigo . '/' . $nomeArquivo;
-            $novoCaminhoCompleto = $diretorio . '/' . $nomeArquivo;
+            $caminhoRelativo = 'curso/' . $cursoCodigo . '/video/' . $nomeArquivo;
+            $caminhoCompleto = $diretorio . '/' . $nomeArquivo;
 
-            if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $novoCaminhoCompleto)) {
-                $getID3 = new \getID3();
-                $fileInfo = $getID3->analyze($novoCaminhoCompleto);
+            if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $caminhoCompleto)) {
+                $getID3 = new getID3();
+                $fileInfo = $getID3->analyze($caminhoCompleto);
                 $novaDuracao = isset($fileInfo['playtime_seconds']) ? $fileInfo['playtime_seconds'] : null;
             } else {
                 echo "<script>alert('Erro ao salvar o novo arquivo de vídeo.');</script>";
@@ -236,7 +240,7 @@ class ControllerVideo extends Controller {
         $stmt = $oConexao->prepare("UPDATE tbvideo SET vidtitulo = :titulo, viddescricao = :descricao, vidcaminho = :caminho, vidduracao = :duracao WHERE vidcodigo = :id");
         $stmt->bindValue(':titulo', $titulo);
         $stmt->bindValue(':descricao', $descricao);
-        $stmt->bindValue(':caminho', $novoCaminhoRelativo);
+        $stmt->bindValue(':caminho', $caminhoRelativo);
         $stmt->bindValue(':duracao', $novaDuracao);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
@@ -264,9 +268,10 @@ class ControllerVideo extends Controller {
 
             if ($video) {
                 // Monta o caminho físico do arquivo
-                $diretorio = Principal::getPathUpload() . '/curso_' . $video['curcodigo'];
+                $diretorio = Principal::getDiretorioUpload() . '/curso/' . $video['curcodigo'] . '/video';
                 $caminhoFisico = $diretorio . '/' . basename($video['vidcaminho']);
 
+                // die();
                 // Exclui o arquivo se existir
                 if (is_file($caminhoFisico)) {
                     unlink($caminhoFisico);
@@ -287,7 +292,7 @@ class ControllerVideo extends Controller {
         } else {
             echo "<script>alert('Código do vídeo inválido.');</script>";
         }
-        $this->redirect('/cursos');
+        $this->redirect('/curso/' . (int)$iCodigoCurso . '/videos');
     }
 
 }

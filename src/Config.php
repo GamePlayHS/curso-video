@@ -5,6 +5,7 @@ namespace src;
 class Config {
 
     const BASE_DIR = '/curso-video/public';
+    const BASE_DIR_UPLOAD = '/curso-video/uploads';
 
     const DB_DRIVER = 'pgsql';
     const DB_HOST = 'localhost';

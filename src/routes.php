@@ -42,4 +42,4 @@ $router->get('/curso/{curso}/video/visualizar/{codigo}', 'ControllerVideo@show')
 
 /* QUESTIONÁRIO */
 
-$router->get('/curso/{curso}/video/{codigo}/questionario', 'ControllerQuestionario@incluirQuestionario');
+$router->get('/curso/{curso}/video/{video}/questionario', 'ControllerQuestionarioVideo@show');

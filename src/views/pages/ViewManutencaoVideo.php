@@ -25,7 +25,7 @@ use core\Principal;
             <div class="col-lg-7">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h2 class="mb-4 text-center"><?= isset($video) ? 'Alterar Vídeo' : 'Adicionar Novo Vídeo' ?></h2>
+                        <h2 class="mb-4 text-center"><?= $titulo ?></h2>
                         <form action="<?= $action ?? '#' ?>" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="titulo" class="form-label">Título</label>
@@ -41,21 +41,15 @@ use core\Principal;
                             <?php if (!isset($visualizacao) || !$visualizacao): ?>
                                 <div class="mb-3" id="campo-arquivo">
                                     <label for="arquivo" class="form-label">Arquivo de Vídeo (.mp4)</label>
-                                    <input type="file" class="form-control" id="arquivo" name="arquivo" accept=".mp4"
-                                        <?= (isset($video) && (!isset($visualizacao) || !$visualizacao)) ? '' : 'disabled' ?> <?= isset($video) ? '' : 'required' ?>>
+                                    <input type="file" class="form-control" id="arquivo" name="arquivo" accept=".mp4" <?= isset($video) ? '' : 'required' ?>>
                                     <div class="form-text text-danger" id="arquivo-erro" style="display:none;">Apenas arquivos .mp4 são permitidos.</div>
-                                    <?php if (isset($video) && !empty($video['vidcaminho'])): ?>
-                                        <div class="form-text">
-                                            Vídeo atual: <a href="<?= Principal::getBaseUrl() . '/uploads/' . $video['vidcaminho'] ?>" target="_blank"><?= htmlspecialchars(basename($video['vidcaminho'])) ?></a>
-                                        </div>
-                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
                             <?php if (isset($video) && !empty($video['vidcaminho'])): ?>
                                 <div class="mb-4">
                                     <label class="form-label">Visualizar Vídeo</label>
                                     <video width="100%" height="340" controls>
-                                        <source src="<?= Principal::getBaseUrl() . '/uploads/' . $video['vidcaminho'] ?>" type="video/mp4">
+                                        <source src="<?= $caminhoCompleto ?>" type="video/mp4">
                                         Seu navegador não suporta a tag de vídeo.
                                     </video>
                                 </div>

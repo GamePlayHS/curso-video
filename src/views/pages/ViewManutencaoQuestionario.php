@@ -29,25 +29,22 @@ use core\Principal;
                         <form action="<?= $action ?>" method="post" enctype="multipart/form-data">
 
                             <!-- Fieldset Questionário -->
-                            <fieldset class="border rounded-3 p-3 mb-3">
-                                <legend class="float-none w-auto px-2">Questionário</legend>
-                                <div class="mb-3">
-                                    <label for="questao" class="form-label">Questão</label>
-                                    <textarea class="form-control" id="questao" name="questao" rows="2" required></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Alternativas</label> 
-                                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                                        <div class="input-group mb-2">
-                                            <div class="input-group-text">
-                                                <input class="form-check-input mt-0" type="radio" name="correta" value="<?= $i ?>" <?= $i === 1 ? 'checked' : '' ?> required title="Marque como correta">
-                                            </div>
-                                            <input type="text" class="form-control" name="alternativa[]" placeholder="Alternativa <?= $i ?>" maxlength="255" required>
+                            <div class="mb-3">
+                                <label for="questao" class="form-label">Questão</label>
+                                <textarea class="form-control" id="questao" name="questao" rows="2" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Alternativas</label> 
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-text">
+                                            <input class="form-check-input mt-0" type="radio" name="correta" value="<?= $i ?>" <?= $i === 1 ? 'checked' : '' ?> required title="Marque como correta">
                                         </div>
-                                    <?php endfor; ?>
-                                    <div class="form-text">Selecione qual alternativa é a correta.</div>
-                                </div>
-                            </fieldset>
+                                        <input type="text" class="form-control" name="alternativa[]" placeholder="Alternativa <?= $i ?>" maxlength="255" required>
+                                    </div>
+                                <?php endfor; ?>
+                                <div class="form-text">Selecione qual alternativa é a correta.</div>
+                            </div>
 
                             <div class="d-flex justify-content-end">
                                 <button type="submit" class="btn btn-success">Salvar Vídeo</button>

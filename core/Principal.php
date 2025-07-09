@@ -48,8 +48,16 @@ class Principal {
      * Retorna o Path de Acesso aos Arquivos Java Script
      * @return string
      */
-    public static function getPathUpload() {
+    public static function getDiretorioUpload() {
         return self::getPathRoot()  . '/uploads';
+    }
+
+    /**
+     * Retorna o Path de Acesso aos Arquivos Java Script
+     * @return string
+     */
+    public static function getPathUpload() {
+        return self::getPathBase()  . Config::BASE_DIR_UPLOAD;
     }
 
 }
