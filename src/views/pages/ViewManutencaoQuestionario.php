@@ -1,4 +1,4 @@
-<?php 
+<?php
 use core\Principal;
 ?><!DOCTYPE html>
 <html lang="pt-br">
@@ -26,29 +26,39 @@ use core\Principal;
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h2 class="mb-4 text-center">Adicionar Novo Vídeo</h2>
-                        <form action="<?= $action ?>" method="post" enctype="multipart/form-data">
-
-                            <!-- Fieldset Questionário -->
+                        <form action="<?= $base . $action ?>" method="post" enctype="multipart/form-data">
+                            <?php if (isset($questionario) && isset($questionario['avacodigo'])): ?>
+                                <input type="hidden" name="codigo" value="<?= htmlspecialchars($questionario['avacodigo']) ?>">
+                            <?php endif; ?>
                             <div class="mb-3">
                                 <label for="questao" class="form-label">Questão</label>
-                                <textarea class="form-control" id="questao" name="questao" rows="2" required></textarea>
+                                <textarea class="form-control" id="questao" name="questao" rows="2" required><?= isset($questionario) && $questionario ? htmlspecialchars($questionario['avaquestao']) : '' ?></textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Alternativas</label> 
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <label class="form-label">Alternativas</label>
+                                <?php
+                                // Usa o array $alternativas passado pelo controller, se existir
+                                $alts = isset($alternativas) && is_array($alternativas) ? $alternativas : [];
+                                $correta = isset($correta) ? $correta : 1;
+                                for ($i = 1; $i <= 5; $i++): ?>
                                     <div class="input-group mb-2">
                                         <div class="input-group-text">
-                                            <input class="form-check-input mt-0" type="radio" name="correta" value="<?= $i ?>" <?= $i === 1 ? 'checked' : '' ?> required title="Marque como correta">
+                                            <input class="form-check-input mt-0" type="radio" name="correta"
+                                                value="<?= $i ?>" <?= ($correta == $i) ? 'checked' : '' ?> required
+                                                title="Marque como correta">
                                         </div>
-                                        <input type="text" class="form-control" name="alternativa[]" placeholder="Alternativa <?= $i ?>" maxlength="255" required>
+                                        <input type="text" class="form-control" name="alternativa[]"
+                                            placeholder="Alternativa <?= $i ?>" maxlength="255"
+                                            value="<?= isset($alts[$i-1]) ? htmlspecialchars($alts[$i-1]) : '' ?>" required>
                                     </div>
                                 <?php endfor; ?>
                                 <div class="form-text">Selecione qual alternativa é a correta.</div>
                             </div>
 
                             <div class="d-flex justify-content-end">
-                                <button type="submit" class="btn btn-success">Salvar Vídeo</button>
-                                <a href="<?= $base ?>/curso/<?= $codigoCurso ?>/videos" class="btn btn-secondary ms-2">Cancelar</a>
+                                <button type="submit" class="btn btn-success">Salvar Questionário</button>
+                                <a href="<?= $base ?>/curso/<?= $codigoCurso ?>/videos"
+                                    class="btn btn-secondary ms-2">Cancelar</a>
                             </div>
                         </form>
                     </div>

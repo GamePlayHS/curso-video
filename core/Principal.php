@@ -45,7 +45,7 @@ class Principal {
     }
 
     /**
-     * Retorna o Path de Acesso aos Arquivos Java Script
+     * Retorna o DIretório de Acesso aos Arquivos Upload
      * @return string
      */
     public static function getDiretorioUpload() {
@@ -53,7 +53,7 @@ class Principal {
     }
 
     /**
-     * Retorna o Path de Acesso aos Arquivos Java Script
+     * Retorna o Path de Acesso aos Arquivos de Upload
      * @return string
      */
     public static function getPathUpload() {

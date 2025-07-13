@@ -1,7 +1,12 @@
 <?php
+
 use core\Router;
 
 $router = new Router();
+
+/* HOME */
+
+$router->get('/', 'ControllerHome@index');
 
 /* LOGIN */
 
@@ -15,10 +20,7 @@ $router->get('/logout', 'ControllerLogin@logout');
 $router->get('/usuario/cadastrar', 'ControllerUsuario@index');
 $router->post('/usuario/cadastrar', 'ControllerUsuario@register');
 $router->get('/usuario/dadosCadastrais', 'ControllerUsuario@dadosCadastrais');
-
-/* HOME */
-
-$router->get('/', 'ControllerHome@index');
+$router->post('/usuario/dadosCadastrais', 'ControllerUsuario@atualizaDadosCadastrais');
 
 /* CURSOS */
 
@@ -29,6 +31,8 @@ $router->get('/curso/alterar/{codigo}', 'ControllerCurso@edit');
 $router->post('/curso/alterar', 'ControllerCurso@update');
 $router->get('/curso/excluir/{codigo}', 'ControllerCurso@delete');
 $router->get('/curso/visualizar/{codigo}', 'ControllerCurso@show');
+$router->get('/curso/{curso}/assistir', 'ControllerCursoAssistir@index');
+$router->get('/curso/{curso}/{video}/assistir', 'ControllerCursoAssistir@index');
 
 /* VÍDEOS */
 
@@ -43,3 +47,5 @@ $router->get('/curso/{curso}/video/visualizar/{codigo}', 'ControllerVideo@show')
 /* QUESTIONÁRIO */
 
 $router->get('/curso/{curso}/video/{video}/questionario', 'ControllerQuestionarioVideo@show');
+$router->post('/curso/{curso}/video/{video}/questionario/inserir', 'ControllerQuestionarioVideo@inserir');
+$router->post('/curso/{curso}/video/{video}/questionario/alterar', 'ControllerQuestionarioVideo@alterar');

@@ -38,16 +38,12 @@ use core\Principal;
                                     </li>
                                 <?php endif; ?>
                                 <li>
-                                    <a class="dropdown-item" href="<?= $base ?>/usuario/dados">Dados Cadastrais</a>
+                                    <a class="dropdown-item" href="<?= $base ?>/usuario/dadosCadastrais">Dados Cadastrais</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="<?= $base ?>/logout">Sair</a>
                                 </li>
                             </ul>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item me-2">
-                            <a class="btn btn-primary" href="<?= $base ?>/cursos">Gerenciar Cursos</a>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -72,7 +68,7 @@ use core\Principal;
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><?= htmlspecialchars($curso['curnome']) ?></h5>
                                 <p class="card-text"><?= htmlspecialchars($curso['curdescricao']) ?></p>
-                                <a href="<?= $base ?>/curso/visualizar/<?= $curso['curcodigo'] ?>" class="btn btn-primary mt-auto">Ver Curso</a>
+                                <a href="<?= $base ?>/curso/<?= $curso['curcodigo'] ?>/assistir" class="btn btn-primary mt-auto">Ver Curso</a>
                             </div>
                         </div>
                     </div>
