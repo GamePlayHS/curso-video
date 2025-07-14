@@ -33,6 +33,7 @@ $router->get('/curso/excluir/{codigo}', 'ControllerCurso@delete');
 $router->get('/curso/visualizar/{codigo}', 'ControllerCurso@show');
 $router->get('/curso/{curso}/assistir', 'ControllerCursoAssistir@index');
 $router->get('/curso/{curso}/{video}/assistir', 'ControllerCursoAssistir@index');
+$router->post('/curso/{curso}/{video}/resposta', 'ControllerCursoAssistir@processaRespostaQuestionario');
 
 /* VÍDEOS */
 
