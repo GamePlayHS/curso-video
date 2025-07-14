@@ -21,6 +21,10 @@ Você deve acessar a pasta *public* do projeto.
 
 O ideal é criar um ***alias*** específico no servidor que direcione diretamente para a pasta *public*.
 
+## Banco de Dados
+
+Banco de Dados Utilizado para o projeto foi o PostgresSQL, deverá ser criado um novo Database com o nome "curso-video", caso queira criar um DataBase com nome diferente, deverá ser alterado a configuração em "src/Config.php".
+
 ## Modelo de MODEL
 ```php
 <?php
