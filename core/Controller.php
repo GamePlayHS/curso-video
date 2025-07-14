@@ -6,7 +6,7 @@ class Controller {
 
     public function __construct() {
         // Lista de rotas públicas (ajuste conforme necessário)
-        $rotasPublicas = ['/curso-video/public/login', '/curso-video/public/loginInvalido', '/curso-video/public/register'];
+        $rotasPublicas = ['/curso-video/public/login', '/curso-video/public/loginInvalido', '/curso-video/public/usuario/cadastrar'];
         $rotaAtual     = $_SERVER['REQUEST_URI'];
 
         // Se não estiver logado e não for rota pública, redireciona

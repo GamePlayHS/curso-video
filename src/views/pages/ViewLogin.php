@@ -38,7 +38,7 @@ use core\Principal;
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary w-50 me-2">Entrar</button>
-                    <a href="<?= $base ?>/register" class="btn btn-secondary w-50">Cadastrar</a>
+                    <a href="<?= $base ?>/usuario/cadastrar" class="btn btn-secondary w-50">Cadastrar</a>
                 </div>
             </form>
         </div>
